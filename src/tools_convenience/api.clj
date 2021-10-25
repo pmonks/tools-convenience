@@ -46,7 +46,7 @@
   "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise."
   [command]
   (try
-    (exec ["command" "-v" command] {:out :capture :err :capture})
+    (exec ["/usr/bin/command" "-v" command] {:out :capture :err :capture})   ; Note: we hardcode the path to command here, since command isn't in the PATH on GitHub VMs
     true
     (catch clojure.lang.ExceptionInfo _
       (throw (ex-info (str "Command " command " was not found.") {})))))
