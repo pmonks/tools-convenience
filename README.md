@@ -22,6 +22,13 @@ Include a maven dependency on the library in your `deps.edn`, for a build tool a
        :ns-default your.build.ns}
 ```
 
+### Require the Namespace
+
+````clojure
+(ns your.build.ns
+  (:require [tools-convenience.api :as tc]))
+```
+
 ### API Documentation
 
 [API documentation is available here](https://pmonks.github.io/tools-convenience/).
