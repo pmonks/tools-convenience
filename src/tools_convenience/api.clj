@@ -43,21 +43,24 @@
     (exec (s/split command-line #"\s+") opts)))
 
 (defn- ensure-command-fn
-  "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise."
-  [command]
+  [command-name]
   (try
-    (exec ["/usr/bin/command" "-v" command] {:out :capture :err :capture})   ; Note: we hardcode the path to command here, since command isn't in the PATH on GitHub VMs
+    (exec ["command" "-v" command-name] {:out :capture :err :capture})
     true
     (catch clojure.lang.ExceptionInfo _
-      (throw (ex-info (str "Command " command " was not found.") {})))))
-(def ensure-command
-     "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise."
-     (memoize ensure-command-fn))
+      (throw (ex-info (str "Command '" command-name "'' was not found.") {})))))
+(def
+  ^{:doc "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise.
+
+Notes:
+* This fn is memoized, so calling it repeatedly with the same command-name will not hurt performance.
+* This functionality does NOT work inside the GitHub Actions environment, as the POSIX `command` executable it relies upon is inexplicably unavailable there."
+    :arglists '([command-name])}
+  ensure-command (memoize ensure-command-fn))
 
 (defn git
   "Execute git with the given args, capturing and returning the output (stdout only)."
   [& args]
-  (ensure-command "git")
   (s/trim (str (:out (exec (concat ["git"] args) {:out :capture})))))
 
 (defn git-current-branch
@@ -71,9 +74,9 @@
   (git "show" "-s" "--format=%H"))
 
 (defn git-exact-tag
-  "Returns the exact tag for the given sha (or current commit sha if not provided), or nil if there is no tag."
-  ([]    (ensure-command "git") (try (git "describe" "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
-  ([sha] (ensure-command "git") (try (git "describe" "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
+  "Returns the exact tag for the given sha (or current commit sha if not provided), or nil if there is no tag for that sha."
+  ([]    (try (git "describe" "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
+  ([sha] (try (git "describe" "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
 
 (defn git-nearest-tag
   "The nearest tag to the current commit."
