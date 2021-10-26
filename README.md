@@ -7,7 +7,7 @@
 
 # tools-convenience
 
-Various convenience fns for tools.build build scripts.
+Various convenience fns for [tools.build](https://github.com/clojure/tools.build)-based build scripts.
 
 ## Using the library
 

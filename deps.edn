@@ -26,7 +26,6 @@
     :build
       {:deps       {io.github.seancorfield/build-clj    {:git/tag     "v0.5.2" :git/sha "8f75b81"}
                     com.github.pmonks/pbr               {:mvn/version "1.0.76"}
-                    codox/codox                         {:mvn/version "0.10.7"}   ;####TODO: Remove this once codox task is added to PBR
                     com.github.pmonks/tools-convenience {:local/root "."}}
        :ns-default build}
 
@@ -52,4 +51,11 @@
     :outdated
       {:extra-deps {com.github.liquidz/antq {:mvn/version "1.1.0"}}
        :main-opts  ["-m" "antq.core"]}
+
+    ; clj -X:codox
+    :codox
+      {:extra-deps {codox/codox {:mvn/version "0.10.7"}}
+       :exec-fn    codox.main/generate-docs
+       :exec-args  {:source-paths ["src"]
+                    :source-uri   "https://github.com/pmonks/tools-convenience/blob/main/{filepath}#L{line}"}}
    }}
