@@ -24,7 +24,7 @@ Include a maven dependency on the library in your `deps.edn`, for a build tool a
 
 ### Require the Namespace
 
-````clojure
+```clojure
 (ns your.build.ns
   (:require [tools-convenience.api :as tc]))
 ```
