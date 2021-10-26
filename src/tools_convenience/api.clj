@@ -49,7 +49,7 @@
       (exec ["sh" "-c" (str "\"command -v " escaped-command-name "\"")] {:out :capture :err :capture})   ; We have to use sh rather than command directly because Linux is stupid sometimes...
       true
       (catch clojure.lang.ExceptionInfo _
-        (throw (ex-info (str "Command '" command-name "'' was not found.") {})))))
+        (throw (ex-info (str "Command '" command-name "'' was not found.") {}))))))
 (def
   ^{:doc "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise.
 
