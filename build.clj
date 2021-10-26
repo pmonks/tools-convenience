@@ -43,9 +43,7 @@ clojure -A:deps -T:build help/doc"
                         :licenses         [:license   {:name "Apache License 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}]
                         :developers       [:developer {:id "pmonks" :name "Peter Monks" :email "pmonks+tools-convenience@gmail.com"}]
                         :scm              {:url "https://github.com/pmonks/tools-convenience" :connection "scm:git:git://github.com/pmonks/tools-convenience.git" :developer-connection "scm:git:ssh://git@github.com/pmonks/tools-convenience.git"}
-                        :issue-management {:system "github" :url "https://github.com/pmonks/tools-convenience/issues"}}
-         :codox        {:source-paths ["src"]
-                        :source-uri   "https://github.com/pmonks/tools-convenience/blob/main/{filepath}#L{line}"}))
+                        :issue-management {:system "github" :url "https://github.com/pmonks/tools-convenience/issues"}}))
 
 ; Build tasks
 (defn clean
