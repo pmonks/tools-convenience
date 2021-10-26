@@ -69,7 +69,7 @@ Notes:
   (git "branch" "--show-current"))
 
 (defn git-current-commit
-  "The SHA of the current commit."
+  "The sha of the current commit."
   []
   (git "show" "-s" "--format=%H"))
 
