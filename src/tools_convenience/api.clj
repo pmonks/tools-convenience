@@ -52,9 +52,9 @@
 (def
   ^{:doc "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise.
 
-Notes:
-* This fn is memoized, so calling it repeatedly with the same command-name will not hurt performance.
-* This functionality does NOT work inside the GitHub Actions environment, as the POSIX `command` executable it relies upon is inexplicably unavailable there."
+  Notes:
+  * This fn is memoized, so calling it repeatedly with the same command-name will not hurt performance.
+  * This functionality does NOT work inside the GitHub Actions environment, as the POSIX `command` executable it relies upon is inexplicably unavailable there."
     :arglists '([command-name])}
   ensure-command (memoize ensure-command-fn))
 
@@ -69,7 +69,7 @@ Notes:
   (git "branch" "--show-current"))
 
 (defn git-current-commit
-  "The SHA of the current commit."
+  "The sha of the current commit."
   []
   (git "show" "-s" "--format=%H"))
 
@@ -82,3 +82,8 @@ Notes:
   "The nearest tag to the current commit."
   []
   (git "describe" "--abbrev=0"))
+
+(defn git-tag-commit
+  "Returns the commit sha for the given tag, or nil if the tag doesn't exist."
+  [tag]
+  (try (git "rev-list" "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
