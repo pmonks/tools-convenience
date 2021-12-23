@@ -24,7 +24,7 @@
 (defmulti exec
   "Executes the given command line, expressed as either a string or a sequential (vector or list), optionally with other clojure.tools.build.api/process options as a second argument.
 
-  Throws ex-info on non-zero status code."
+  Throws an ExceptionInfo on non-zero status code, containing the entire execution result (from clojure.tools.build.api/process) in the info map."
   {:arglists '([command-line]
                [command-line opts])}
   (fn [& args] (sequential? (first args))))
@@ -57,6 +57,12 @@
     :arglists '([command-name])}
   ensure-command (memoize ensure-command-fn))
 
+(defn clojure
+  "Execute clojure reproducibly (-Srepro) with the given args, capturing and returning the output (stdout only)."
+  [& args]
+  (ensure-command "clojure")
+  (s/trim (str (:out (exec (concat ["clojure" "-Srepro"] args) {:out :capture})))))
+
 (defn git
   "Execute git with the given args, capturing and returning the output (stdout only)."
   [& args]
@@ -75,8 +81,8 @@
 
 (defn git-exact-tag
   "Returns the exact tag for the given sha (or current commit sha if not provided), or nil if there is no tag for that sha."
-  ([]    (ensure-command "git") (try (git "describe" "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
-  ([sha] (ensure-command "git") (try (git "describe" "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
+  ([]    (try (git "describe" "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
+  ([sha] (try (git "describe" "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
 
 (defn git-nearest-tag
   "The nearest tag to the current commit."
@@ -86,8 +92,4 @@
 (defn git-tag-commit
   "Returns the commit sha for the given tag, or nil if the tag doesn't exist."
   [tag]
-  (ensure-command "git")
-  (try
-    (git "rev-list" "-n" "1" tag)
-    (catch clojure.lang.ExceptionInfo _
-      nil)))
+  (try (git "rev-list" "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
