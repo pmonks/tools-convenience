@@ -9,6 +9,8 @@
 
 Various convenience fns for [tools.build](https://github.com/clojure/tools.build)-based build scripts.
 
+**NOTE: This library almost certainly won't work on "raw" Windows, and it is unknown if it works on [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).**
+
 ## Using the library
 
 ### Dependency
