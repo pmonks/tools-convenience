@@ -32,23 +32,27 @@
 (defmethod exec true
   ([command-line] (exec command-line nil))
   ([command-line opts]
-    (let [result (b/process (into {:command-args command-line} opts))]
-      (if (not= 0 (:exit result))
-        (throw (ex-info (str "Command '" (s/join " " command-line) "' failed (" (:exit result) ").") result))
-        result))))
+    (when-let [command-line (seq (remove s/blank? command-line))]
+      (let [result (b/process (into {:command-args command-line} opts))]
+        (if (not= 0 (:exit result))
+          (throw (ex-info (str "Command '" (s/join " " command-line) "' failed (" (:exit result) ").") result))
+          result)))))
 
 (defmethod exec false
   ([command-line] (exec command-line nil))
   ([command-line opts]
-    (exec (s/split command-line #"\s+") opts)))
+    (when-not (s/blank? command-line)
+      (exec (s/split command-line #"\s+") opts))))
 
 (defn- ensure-command-fn
   [command-name]
-  (try
-    (exec ["sh" "-c" (str "command -v " command-name)] {:out :capture :err :capture})   ; We have to use sh rather than command directly because Linux is stupid sometimes...
-    true
-    (catch clojure.lang.ExceptionInfo _
-      (throw (ex-info (str "Command '" command-name "' was not found.") {})))))
+  (if-not (s/blank? command-name)
+    (try
+      (exec ["sh" "-c" (str "command -v " command-name)] {:out :capture :err :capture})   ; We have to use sh rather than command directly because Linux is stupid sometimes...
+      true
+      (catch clojure.lang.ExceptionInfo ei
+        (throw (ex-info (str "Command '" command-name "' was not found.") {} ei))))
+    (throw (ex-info (str "No command name provided.") {}))))
 (def
   ^{:doc "Ensures that the given command is available (note: POSIX only). Returns true if it exists, throws an exception otherwise.
 
@@ -58,38 +62,48 @@
   ensure-command (memoize ensure-command-fn))
 
 (defn clojure
-  "Execute clojure reproducibly (-Srepro) with the given args, capturing and returning the output (stdout only)."
+  "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing and returning stdout, and printing any errors to stderr."
   [& args]
   (ensure-command "clojure")
-  (s/trim (str (:out (exec (concat ["clojure" "-Srepro"] args) {:out :capture})))))
+  (if-let [args (seq (remove s/blank? args))]
+    (let [result (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:out :capture})]   ; Let stderr be printed
+      (s/trim (str (:out result))))
+    (throw (ex-info "No clojure arguments provided, but they are mandatory." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
+
+(defn- safe-name
+  "A nil-safe version of `name`.  🙄"
+  [x]
+  (when x (name x)))
 
 (defn git
-  "Execute git with the given args, capturing and returning the output (stdout only)."
+  "Execute git with the given args (which can be strings or keywords), capturing and returning the output (stdout only)."
   [& args]
   (ensure-command "git")
-  (s/trim (str (:out (exec (concat ["git"] args) {:out :capture})))))
+  (if-let [args (seq (remove s/blank? (map safe-name args)))]
+    (s/trim (str (:out (exec (concat ["git"] args) {:out :capture}))))
+    (throw (ex-info "No git arguments provided, but they are mandatory." {}))))
 
 (defn git-current-branch
   "The current git branch."
   []
-  (git "branch" "--show-current"))
+  (git :branch "--show-current"))
 
 (defn git-current-commit
   "The sha of the current commit."
   []
-  (git "show" "-s" "--format=%H"))
+  (git :show "-s" "--format=%H"))
 
 (defn git-exact-tag
   "Returns the exact tag for the given sha (or current commit sha if not provided), or nil if there is no tag for that sha."
-  ([]    (try (git "describe" "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
-  ([sha] (try (git "describe" "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
+  ([]    (try (git :describe "--tags" "--exact-match")     (catch clojure.lang.ExceptionInfo _ nil)))
+  ([sha] (try (git :describe "--tags" "--exact-match" sha) (catch clojure.lang.ExceptionInfo _ nil))))
 
 (defn git-nearest-tag
   "The nearest tag to the current commit."
   []
-  (git "describe" "--abbrev=0"))
+  (git :describe "--abbrev=0"))
 
 (defn git-tag-commit
   "Returns the commit sha for the given tag, or nil if the tag doesn't exist."
   [tag]
-  (try (git "rev-list" "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
+  (try (git :rev-list "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
