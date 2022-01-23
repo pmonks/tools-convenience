@@ -56,7 +56,7 @@
     ; clj -M:outdated
     :outdated
       {:extra-deps {com.github.liquidz/antq {:mvn/version "1.4.0"}}
-       :main-opts  ["-m" "antq.core" "--skip=pom" "--exclude=com.github.pmonks/pbr"]}
+       :main-opts  ["-m" "antq.core" "--skip=pom"]}
 
     ; clj -X:codox
     :codox
