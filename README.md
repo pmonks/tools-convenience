@@ -1,13 +1,15 @@
 | | | | |
 |---:|:---:|:---:|:---:|
-| [**main**](https://github.com/pmonks/tools-convenience/tree/main) | [![Build](https://github.com/pmonks/tools-convenience/workflows/build/badge.svg?branch=main)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Abuild) | [![Lint](https://github.com/pmonks/tools-convenience/workflows/lint/badge.svg?branch=main)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Alint) | [![Dependencies](https://github.com/pmonks/tools-convenience/workflows/dependencies/badge.svg?branch=main)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies) |
-| [**dev**](https://github.com/pmonks/tools-convenience/tree/dev) | [![Build](https://github.com/pmonks/tools-convenience/workflows/build/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Abuild) | [![Lint](https://github.com/pmonks/tools-convenience/workflows/lint/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Alint) | [![Dependencies](https://github.com/pmonks/tools-convenience/workflows/dependencies/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies) |
+| [**main**](https://github.com/pmonks/tools-convenience/tree/main) | [![CI](https://github.com/pmonks/tools-convenience/workflows/CI/badge.svg?branch=main)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3ACI+branch%3Amain) | [![Dependencies](https://github.com/pmonks/tools-convenience/workflows/dependencies/badge.svg?branch=main)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies+branch%3Amain) |
+| [**dev**](https://github.com/pmonks/tools-convenience/tree/dev) | [![CI](https://github.com/pmonks/tools-convenience/workflows/CI/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3ACI+branch%3Adev) | [![Dependencies](https://github.com/pmonks/tools-convenience/workflows/dependencies/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies+branch%3Adev) |
 
 [![Latest Version](https://img.shields.io/clojars/v/com.github.pmonks/tools-convenience)](https://clojars.org/com.github.pmonks/tools-convenience/) [![Open Issues](https://img.shields.io/github/issues/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/issues) [![License](https://img.shields.io/github/license/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/blob/main/LICENSE)
 
 # tools-convenience
 
 Various convenience fns for [tools.build](https://github.com/clojure/tools.build)-based build scripts.
+
+**NOTE: This library almost certainly won't work on "raw" Windows, and it is unknown if it works on [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).**
 
 ## Using the library
 
