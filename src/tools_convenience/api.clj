@@ -114,3 +114,11 @@
   "Returns the commit sha for the given tag, or nil if the tag doesn't exist."
   [tag]
   (try (git :rev-list "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
+
+(defn git-remote
+  "The URL of the origin server (if any). Note: includes the .git extension."
+  []
+  (try
+    (let [repo (git :config "--get" "remote.origin.url")]
+      (when-not (s/blank? repo) repo))
+    (catch clojure.lang.ExceptionInfo _ nil)))
