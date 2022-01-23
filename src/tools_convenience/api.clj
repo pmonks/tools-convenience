@@ -120,5 +120,5 @@
   []
   (try
     (let [repo (git :config "--get" "remote.origin.url")]
-      (when-not [s/blank? repo] repo))
+      (when-not (s/blank? repo) repo))
     (catch clojure.lang.ExceptionInfo _ nil)))
