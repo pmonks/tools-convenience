@@ -62,12 +62,19 @@
   ensure-command (memoize ensure-command-fn))
 
 (defn clojure
-  "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing and returning stdout, and printing any errors to stderr."
+  "Execute clojure reproducibly (-Srepro) with the given args (strings)."
   [& args]
   (ensure-command "clojure")
   (if-let [args (seq (remove s/blank? args))]
-    (let [result (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:out :capture})]   ; Let stderr be printed
-      (s/trim (str (:out result))))
+    (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args))
+    (throw (ex-info "No clojure arguments provided, but they are mandatory." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
+
+(defn clojure-silent
+  "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing and returning stdout and stderr (as a result map as per clojure.tools.build.api/process)."
+  [& args]
+  (ensure-command "clojure")
+  (if-let [args (seq (remove s/blank? args))]
+    (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:out :capture :err :capture})
     (throw (ex-info "No clojure arguments provided, but they are mandatory." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
 (defn- safe-name

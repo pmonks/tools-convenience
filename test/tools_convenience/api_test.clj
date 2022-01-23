@@ -19,7 +19,7 @@
 (ns tools-convenience.api-test
   (:require [clojure.test          :refer [deftest testing is]]
             [clojure.string        :as s]
-            [tools-convenience.api :refer [exec ensure-command clojure git]]))
+            [tools-convenience.api :refer [exec ensure-command clojure-silent git]]))
 
 (deftest exec-tests
   (println)
@@ -70,27 +70,19 @@
     (is                                     (ensure-command "clojure"))))
 
 (deftest clojure-tests
-  (println)
-  (println "##################################################################")
-  (println "#                                                                #")
-  (println "#  NOTE: These tests write errors to stderr - this is expected!  #")
-  (println "#                                                                #")
-  (println "##################################################################")
-  (println)
-  (flush)
   (testing "Nil, empty or blank args"
-    (is (thrown? clojure.lang.ExceptionInfo (clojure nil)))
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "")))
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "       ")))
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "\n")))
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "\t")))
-    (is (thrown? clojure.lang.ExceptionInfo (clojure nil "" "       " "\n" "\t"))))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent nil)))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "")))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "       ")))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "\n")))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "\t")))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent nil "" "       " "\n" "\t"))))
   (testing "Invalid arguments"
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "-X:invalid-alias")))       ; Note: this test, and the subsequent one, produce a lot of output to stderr that _appears_ to be a test failure but is not.
-    (is (thrown? clojure.lang.ExceptionInfo (clojure "invalid-clojure-file-to-run"))))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "-X:invalid-alias")))
+    (is (thrown? clojure.lang.ExceptionInfo (clojure-silent "invalid-clojure-file-to-run"))))
   (testing "Valid arguments"
-    (is (not (nil?                          (clojure "-Sdescribe"))))
-    (is (not (nil?                          (clojure "-Spath"))))))
+    (is (not (nil?                          (clojure-silent "-Sdescribe"))))
+    (is (not (nil?                          (clojure-silent "-Spath"))))))
 
 (deftest git-tests
   (println)
