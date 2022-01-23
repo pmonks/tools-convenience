@@ -22,6 +22,14 @@
             [tools-convenience.api :refer [exec ensure-command clojure git]]))
 
 (deftest exec-tests
+  (println)
+  (println "###########################################################")
+  (println "#                                                         #")
+  (println "#  NOTE: These tests write to stdout - this is expected!  #")
+  (println "#                                                         #")
+  (println "###########################################################")
+  (println)
+  (flush)
   (testing "Nil, empty or blank commands"
     (is (nil?                        (exec nil)))
     (is (nil?                        (exec "")))
@@ -62,6 +70,14 @@
     (is                                     (ensure-command "clojure"))))
 
 (deftest clojure-tests
+  (println)
+  (println "##################################################################")
+  (println "#                                                                #")
+  (println "#  NOTE: These tests write errors to stderr - this is expected!  #")
+  (println "#                                                                #")
+  (println "##################################################################")
+  (println)
+  (flush)
   (testing "Nil, empty or blank args"
     (is (thrown? clojure.lang.ExceptionInfo (clojure nil)))
     (is (thrown? clojure.lang.ExceptionInfo (clojure "")))
@@ -77,6 +93,14 @@
     (is (not (nil?                          (clojure "-Spath"))))))
 
 (deftest git-tests
+  (println)
+  (println "##################################################################")
+  (println "#                                                                #")
+  (println "#  NOTE: These tests write errors to stderr - this is expected!  #")
+  (println "#                                                                #")
+  (println "##################################################################")
+  (println)
+  (flush)
   (testing "Nil, empty or blank args"
     (is (thrown? clojure.lang.ExceptionInfo (git nil)))
     (is (thrown? clojure.lang.ExceptionInfo (git "")))
