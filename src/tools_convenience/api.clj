@@ -116,9 +116,9 @@
   (try (git :rev-list "-n" "1" tag) (catch clojure.lang.ExceptionInfo _ nil)))
 
 (defn git-remote
-  "The URL of the origin server (if any), without the trailing .git extension"
+  "The URL of the origin server (if any). Note: includes the .git extension."
   []
   (try
-    (let [repo (s/replace (git :config "--get" "remote.origin.url") ".git" "")]
+    (let [repo (git :config "--get" "remote.origin.url")]
       (when-not [s/blank? repo] repo))
     (catch clojure.lang.ExceptionInfo _ nil)))
