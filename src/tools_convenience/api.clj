@@ -65,7 +65,7 @@
   "Execute clojure reproducibly (-Srepro) with the given args (strings)."
   [& args]
   (ensure-command "clojure")
-  (if (> (count args) 0)
+  (if (> (count (filter (complement s/blank?) args)) 0)
     (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args))
     (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
@@ -73,7 +73,7 @@
   "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing and returning stdout and stderr (as a result map as per clojure.tools.build.api/process)."
   [& args]
   (ensure-command "clojure")
-  (if (> (count args) 0)
+  (if (> (count (filter (complement s/blank?) args)) 0)
     (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:out :capture :err :capture})
     (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
