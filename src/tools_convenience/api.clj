@@ -87,7 +87,7 @@
   [& args]
   (ensure-command "git")
   (if-let [args (seq (remove s/blank? (map safe-name args)))]
-    (s/trim (str (:out (exec (concat ["git"] args) {:out :capture}))))
+    (s/trim (str (:out (exec (concat ["git"] args) {:out :capture :err :capture}))))
     (throw (ex-info "No git arguments provided, but they are mandatory." {}))))
 
 (defn git-current-branch
@@ -122,3 +122,10 @@
     (let [repo (git :config "--get" "remote.origin.url")]
       (when-not (s/blank? repo) repo))
     (catch clojure.lang.ExceptionInfo _ nil)))
+
+(defn git-tag-or-hash
+  "Returns the tag for the current revision, or if there isn't one, the hash of the current revision."
+  []
+  (if-let [git-tag (git-exact-tag)]
+    git-tag
+    (git-current-commit)))
