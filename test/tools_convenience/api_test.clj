@@ -85,14 +85,6 @@
     (is (not (nil?                          (clojure-silent "-Spath"))))))
 
 (deftest git-tests
-  (println)
-  (println "##################################################################")
-  (println "#                                                                #")
-  (println "#  NOTE: These tests write errors to stderr - this is expected!  #")
-  (println "#                                                                #")
-  (println "##################################################################")
-  (println)
-  (flush)
   (testing "Nil, empty or blank args"
     (is (thrown? clojure.lang.ExceptionInfo (git nil)))
     (is (thrown? clojure.lang.ExceptionInfo (git "")))
