@@ -21,6 +21,8 @@
   (:require [clojure.string          :as s]
             [clojure.tools.build.api :as b]))
 
+(def ^:private debug (Boolean/parseBoolean (s/trim (str (System/getenv "TOOLS_CONVENIENCE_DEBUG")))))
+
 (defmulti exec
   "Executes the given command line, expressed as either a string or a sequential (vector or list), optionally with other clojure.tools.build.api/process options as a second argument.
 
@@ -33,6 +35,7 @@
   ([command-line] (exec command-line nil))
   ([command-line opts]
     (when-let [command-line (seq (remove s/blank? command-line))]
+      (when debug (println "About to invoke:" command-line))
       (let [result (b/process (into {:command-args command-line} opts))]
         (if (not= 0 (:exit result))
           (throw (ex-info (str "Command '" (s/join " " command-line) "' failed (" (:exit result) ").") result))
