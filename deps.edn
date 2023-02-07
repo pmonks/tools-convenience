@@ -17,9 +17,9 @@
 ;
 
 {:deps
-   {io.github.clojure/tools.build {:git/tag "v0.9.2" :git/sha "fe6b140"}}
+   {io.github.clojure/tools.build {:git/tag "v0.9.3" :git/sha "e537cd1"}}
  :aliases
-   {:build {:deps       {io.github.clojure/tools.build       {:git/tag "v0.9.2" :git/sha "fe6b140"}
+   {:build {:deps       {io.github.clojure/tools.build       {:git/tag "v0.9.3" :git/sha "e537cd1"}
                          com.github.pmonks/pbr               {:mvn/version "RELEASE"}
                          com.github.pmonks/tools-convenience {:local/root "."}}
             :ns-default pbr.build}}}
