@@ -85,6 +85,14 @@
     (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:out :capture :err :capture})
     (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
+(defn clojure-discard-exceptions
+  "Execute clojure reproducibly (-Srepro) with the given args (strings), discarding any exception thrown by the sub-process (an exception will still thrown in this process if the exit status <> 0, however)."
+  [& args]
+  (ensure-command "clojure")
+  (if (> (count (filter (complement s/blank?) args)) 0)
+    (exec (concat ["clojure" "-J-Dclojure.main.report=none" "-Srepro"] args))
+    (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
+
 (defn- safe-name
   "A nil-safe version of `name`.  🙄"
   [x]
