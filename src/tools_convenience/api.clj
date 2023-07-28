@@ -28,29 +28,41 @@
   [command-line]
   (s/join " " (map #(if (s/includes? % " ") (str "'" % "'") %) command-line)))
 
-(defmulti exec
+(defmulti process
   "Executes the given command line, expressed as either a string or a sequential (vector or list), optionally with other clojure.tools.build.api/process options as a second argument.
 
-  Throws an ExceptionInfo on non-zero status code, containing the entire execution result (from clojure.tools.build.api/process) in the info map."
+  Caller must check :exit status code of the result to determine whether the sub-process succeeded or not.
+
+  Throws if the command doesn't exist."
   {:arglists '([command-line]
                [command-line opts])}
   (fn [& args] (sequential? (first args))))
 
-(defmethod exec true
-  ([command-line] (exec command-line nil))
+(defmethod process true
+  ([command-line] (process command-line nil))
   ([command-line opts]
     (when-let [command-line (seq (remove s/blank? command-line))]
       (when debug (println "About to invoke:" (format-command-line command-line)))
-      (let [result (b/process (into {:command-args command-line} opts))]
-        (if (not= 0 (:exit result))
-          (throw (ex-info (str "Command '" (s/join " " command-line) "' failed (" (:exit result) ").") result))
-          result)))))
+      (b/process (into {:command-args command-line} opts)))))
 
-(defmethod exec false
-  ([command-line] (exec command-line nil))
+(defmethod process false
+  ([command-line] (process command-line nil))
   ([command-line opts]
     (when-not (s/blank? command-line)
-      (exec (s/split command-line #"\s+") opts))))
+      (process (s/split command-line #"\s+") opts))))
+
+(defn exec
+  "Executes the given command line, expressed as either a string or a sequential (vector or list), optionally with other clojure.tools.build.api/process options as a second argument.
+
+  Throws an ExceptionInfo on non-zero status code, containing the entire execution result (from clojure.tools.build.api/process) in the info map.
+
+  Throws if the command doesn't exist."
+  ([command-line] (exec command-line nil))
+  ([command-line opts]
+    (when-let [result (process command-line opts)]
+      (if (not= 0 (:exit result))
+        (throw (ex-info (str "Command '" (s/join " " command-line) "' failed (" (:exit result) ").") result))
+        result))))
 
 (defn- ensure-command-fn
   [command-name]
@@ -86,11 +98,11 @@
     (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
 (defn clojure-capture-exceptions
-  "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing stderr only (as a result map as per clojure.tools.build.api/process)."
+  "Execute clojure reproducibly (-Srepro) with the given args (strings), capturing stderr only (as a result map as per clojure.tools.build.api/process), and not throwing exceptions on sub-process failure (caller must check :exit status code in result)."
   [& args]
   (ensure-command "clojure")
   (if (> (count (filter (complement s/blank?) args)) 0)
-    (exec (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:err :capture})
+    (process (concat ["clojure" "-J-Dclojure.main.report=stderr" "-Srepro"] args) {:err :capture})
     (throw (ex-info "No clojure arguments provided, but at least one is required." {}))))   ; Attempt to prevent clojure from dropping into a REPL, since that will cause everything to lock
 
 (defn clojure-discard-exceptions
