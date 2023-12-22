@@ -30,7 +30,7 @@
          :validate-pom true
          :pom          {:description      "Convenience fns for tools.build scripts"
                         :url              "https://github.com/pmonks/tools-convenience"
-                        :licenses         [:license   {:name "Apache License 2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}]
+                        :licenses         [:license   {:name "Apache-2.0" :url "http://www.apache.org/licenses/LICENSE-2.0.html"}]
                         :developers       [:developer {:id "pmonks" :name "Peter Monks" :email "pmonks+tools-convenience@gmail.com"}]
                         :scm              {:url "https://github.com/pmonks/tools-convenience" :connection "scm:git:git://github.com/pmonks/tools-convenience.git" :developer-connection "scm:git:ssh://git@github.com/pmonks/tools-convenience.git"}
                         :issue-management {:system "github" :url "https://github.com/pmonks/tools-convenience/issues"}}))
