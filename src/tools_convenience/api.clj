@@ -21,7 +21,7 @@
   (:require [clojure.string          :as s]
             [clojure.tools.build.api :as b]))
 
-(def ^:private debug (Boolean/parseBoolean (s/trim (str (System/getenv "TOOLS_CONVENIENCE_DEBUG")))))
+(def debug (Boolean/parseBoolean (s/trim (str (System/getenv "TOOLS_CONVENIENCE_DEBUG")))))
 
 (defn- format-command-line
   "Returns a string representation of the given command line (a sequence of values), in a format that can be copied and pasted into a terminal."
