@@ -1,11 +1,12 @@
-| | | |
-|---:|:---:|:---:|
-| [**release**](https://github.com/pmonks/tools-convenience/tree/release) | [![CI](https://github.com/pmonks/tools-convenience/actions/workflows/ci.yml/badge.svg?branch=release)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3ACI+branch%3Arelease) | [![Dependencies](https://github.com/pmonks/tools-convenience/actions/workflows/dependencies.yml/badge.svg?branch=release)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies+branch%3Arelease) |
-| [**dev**](https://github.com/pmonks/tools-convenience/tree/dev) | [![CI](https://github.com/pmonks/tools-convenience/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3ACI+branch%3Adev) | [![Dependencies](https://github.com/pmonks/tools-convenience/actions/workflows/dependencies.yml/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies+branch%3Adev) |
-
-[![Latest Version](https://img.shields.io/clojars/v/com.github.pmonks/tools-convenience)](https://clojars.org/com.github.pmonks/tools-convenience/) [![License](https://img.shields.io/github/license/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/blob/release/LICENSE) [![Open Issues](https://img.shields.io/github/issues/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/issues)
-
 # tools-convenience
+
+[![CI](https://github.com/pmonks/tools-convenience/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3ACI+branch%3Adev)
+[![Dependencies](https://github.com/pmonks/tools-convenience/actions/workflows/dependencies.yml/badge.svg?branch=dev)](https://github.com/pmonks/tools-convenience/actions?query=workflow%3Adependencies+branch%3Adev) |
+<br/>
+[![Latest Version](https://img.shields.io/clojars/v/com.github.pmonks/tools-convenience)](https://clojars.org/com.github.pmonks/tools-convenience/)
+[![License](https://img.shields.io/github/license/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/blob/release/LICENSE)
+[![Open Issues](https://img.shields.io/github/issues/pmonks/tools-convenience.svg)](https://github.com/pmonks/tools-convenience/issues)
+![Maintained](https://badges.ws/badge/?label=maintained&value=yes,+at+author's+discretion)
 
 Various convenience fns for [tools.build](https://github.com/clojure/tools.build)-based build scripts.
 
